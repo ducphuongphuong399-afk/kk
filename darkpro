@@ -1,0 +1,123 @@
+
+(function () {
+  "use strict";
+
+  // Không tạo panel trùng khi script được chạy lại
+  if (document.getElementById("dark-pro-panel")) return;
+
+  const style = document.createElement("style");
+  style.textContent = `
+    #dark-pro-panel {
+      position: fixed;
+      top: 85px;
+      right: 12px;
+      z-index: 2147483647;
+      width: 220px;
+      color: #f3f4f6;
+      background: #111315;
+      border: 1px solid #34383e;
+      border-radius: 12px;
+      font: 13px/1.5 system-ui, sans-serif;
+      box-shadow: 0 8px 28px #0008;
+      overflow: hidden;
+    }
+    #dark-pro-panel * { box-sizing: border-box; }
+    #dark-pro-panel .dp-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: #191c20;
+      border-bottom: 1px solid #34383e;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    #dark-pro-panel .dp-body { padding: 12px; }
+    #dark-pro-panel .dp-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 7px 0;
+      color: #aeb4bd;
+    }
+    #dark-pro-panel .dp-value { color: #f3f4f6; }
+    #dark-pro-panel .dp-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 5px;
+      border-radius: 50%;
+      background: #38bdf8;
+    }
+    #dark-pro-panel button {
+      color: #fff;
+      background: #292d33;
+      border: 1px solid #424750;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+    #dark-pro-panel .dp-foot {
+      color: #737b87;
+      font-size: 11px;
+      margin-top: 12px;
+      border-top: 1px solid #34383e;
+      padding-top: 8px;
+    }
+    #dark-pro-panel.dp-small { width: 160px; }
+    #dark-pro-panel.dp-small .dp-body { display: none; }
+  `;
+  (document.head || document.documentElement).appendChild(style);
+
+  const panel = document.createElement("section");
+  panel.id = "dark-pro-panel";
+  panel.innerHTML = `
+    <div class="dp-head">
+      <span>DARK PRO</span>
+      <button id="dp-toggle" aria-label="Thu gọn">−</button>
+    </div>
+    <div class="dp-body">
+      <div class="dp-row">
+        <span>Trạng thái script</span>
+        <span class="dp-value"><i class="dp-dot"></i>Đang chạy</span>
+      </div>
+      <div class="dp-row">
+        <span>Trang</span>
+        <span class="dp-value" id="dp-page">Đang kiểm tra</span>
+      </div>
+      <div class="dp-row">
+        <span>Thiết bị</span>
+        <span class="dp-value" id="dp-device">Đang kiểm tra</span>
+      </div>
+      <div class="dp-foot">
+        Dark Pro UI · Chỉ hiển thị thông tin trang
+      </div>
+    </div>
+  `;
+
+  function updateStatus() {
+    const page = document.getElementById("dp-page");
+    const device = document.getElementById("dp-device");
+
+    if (page) {
+      page.textContent = location.hostname === "haxball.com"
+        ? "HaxBall"
+        : "Trang khác";
+    }
+
+    if (device) {
+      device.textContent =
+        /Android/i.test(navigator.userAgent) ? "Android" : "Trình duyệt";
+    }
+  }
+
+  panel.querySelector("#dp-toggle").addEventListener("click", () => {
+    const small = panel.classList.toggle("dp-small");
+    panel.querySelector("#dp-toggle").textContent = small ? "+" : "−";
+  });
+
+  (document.body || document.documentElement).appendChild(panel);
+  updateStatus();
+
+  console.log("[Dark Pro] Giao diện đã được khởi tạo.");
+})();
